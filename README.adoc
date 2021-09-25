@@ -1,0 +1,24 @@
+== RoseJSON Overview
+
+RoseJSON is a https://ocaml-community.github.io/yojson/yojson/Yojson/index.html[Yojson-like] library with zero dependencies. It can be used with
+ReasonML native (via `dune`) or with JavaScript (via `bsb`). I currently use this in processing a large corpus of JSON files with both.
+
+== Usage
+
+[source,reasonml]
+----
+let jsond = RoseJSON.from_string({|{"test":[1,2,3], "this":{"thing":[4,5,6]}}|}); //<1>
+let inner_data = jsond |> RoseJSON.member("this") |> RoseJSON.member("thing") |> RoseJSON.to_array |> List.map(RoseJSON.to_int); //<2>
+----
+<1> RoseJSON only provides a `from_string` parser, which returns a `RoseJSON.t` object
+<2> We can build Yojson-like pipeliness for members
+
+== To Do
+
+. The inner parsing of JSON is _atrocious_ currently; I wrote something "good enough" to get started, but work can be done there
+.. I was thinking about a simple Buffer-like interface that can be shunted around with pipe-last
+. A `Native` interface would be nice; something that presents the same `RoseJSON.t` but using a different backend
+.. `Js.Json` in JavaScript Targets
+.. `Yojson` or the like in Native targets
+. Speed increase; it's generally fine for Native code, but in JavaScript, JSON data over 10k can get S L O W
+.. It's effectively unusable for JSON data over 100k; I switched to a Native build internally because of this, and it was sub-1s
