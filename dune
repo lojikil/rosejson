@@ -1,2 +1,4 @@
 (library
-    (name RoseJSON))
+    (name RoseJSON)
+    (synopsis "a Yojson-like parsing library for ReasonML, with 0 dependencies")
+    (modes byte native))
